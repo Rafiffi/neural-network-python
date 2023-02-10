@@ -1,0 +1,123 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 10 16:12:40 2023
+
+@author: rafal
+"""
+
+#%% Import necessary modules
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
+#import numpy as np
+import pandas as pd 
+
+#%% Save the number of columns in predictors: n_cols
+predictors = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\df.csv', sep=';')
+predictors = predictors.drop(predictors.columns[0],axis=1)
+
+
+#%%
+y1 = predictors['dax']
+X1 = predictors.drop(predictors.columns[0],axis=1)
+n_cols = X1.shape[1]
+X_train1, y_train1 = X1[:1000], y1[:1000]
+X_val1, y_val1 = X1[1000:1080], y1[1000:1080]
+X_test1, y_test1 = X1[1080:], y1[1080:]
+X_train1.shape, y_train1.shape, X_val1.shape, y_val1.shape, X_test1.shape, y_test1.shape
+#%%
+# Set up the model: model
+model = Sequential()
+
+# Add the first layer
+model.add(Dense(8, activation='relu', input_shape=(n_cols,)))
+
+# Add the second layer
+model.add(Dense(8, activation='relu'))
+
+# Add the output layer
+model.add(Dense(1))
+
+model.summary()
+#%% fit 
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+# Verify that model contains information from compiling
+print("Loss function: " + model.loss)
+
+history =  model.fit(X1,y1, epochs=20)
+
+
+
+#%%
+
+from matplotlib import pyplot as plt 
+
+plt.plot(history.history['loss'], label='Training loss')
+plt.plot(history.history['val_loss'], label='Validation loss')
+plt.legend()
+#%%
+y_mse = model.evaluate(X1,y1)
+print(y_mse) # 664889.0625
+
+#%%
+# Set up the model: model
+model_2 = Sequential()
+
+# Add the first layer
+model_2.add(Dense(100, activation='relu', input_shape=(n_cols,)))
+
+# Add the second layer
+model_2.add(Dense(100, activation='relu'))
+# Add the third layer
+model_2.add(Dense(100, activation='relu'))
+
+# Add the output layer
+model_2.add(Dense(1))
+
+model_2.summary()
+#%% fit 
+
+# Compile the model
+model_2.compile(optimizer='adam', loss='mean_squared_error')
+
+
+
+history_2 =  model_2.fit(X1,y1, epochs=20)
+
+
+#%%
+y_mse_2 = model_2.evaluate(X1,y1)
+print(y_mse_2) # 649743.5
+
+
+#%%
+# Set up the model: model
+model_3 = Sequential()
+
+# Add the first layer
+model_3.add(Dense(100, activation='relu', input_shape=(n_cols,)))
+
+# Add the second layer
+model_3.add(Dense(100, activation='sigmoid'))
+# Add the third layer
+model_3.add(Dense(100, activation='relu'))
+
+# Add the output layer
+model_3.add(Dense(1))
+
+model_3.summary()
+#%% fit 
+
+# Compile the model
+model_3.compile(optimizer='adam', loss='mean_squared_error')
+
+
+
+history_3 =  model_3.fit(X1,y1, epochs=20)
+
+
+#%%
+y_mse_3 = model_3.evaluate(X1,y1)
+print(y_mse_3) # 138503280.0 - doesn't work with sigmoid 
