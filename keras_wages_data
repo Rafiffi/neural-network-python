@@ -1,0 +1,96 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 10 12:53:51 2023
+
+@author: rafal
+"""
+
+# Import necessary modules
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
+#import numpy as np
+import pandas as pd 
+#%%
+
+import os
+
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
+#%% Save the number of columns in predictors: n_cols
+predictors = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\dane\wages.csv')
+n_cols = predictors.shape[1]
+
+#%%
+target = predictors['wage_per_hour']
+#%% siec
+# Set up the model: model
+model = Sequential()
+
+# Add the first layer
+model.add(Dense(50, activation='relu', input_shape=(n_cols,)))
+
+# Add the second layer
+model.add(Dense(32, activation='relu'))
+
+# Add the output layer
+model.add(Dense(1))
+
+model.summary()
+#%% fit 
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+# Verify that model contains information from compiling
+print("Loss function: " + model.loss)
+
+history =  model.fit(predictors, target, validation_split=0.3, epochs=20)
+
+
+# %%Create the plot
+from matplotlib import pyplot as plt 
+
+plt.plot(history.history['loss'], label='Training loss')
+plt.plot(history.history['val_loss'], label='Validation loss')
+plt.legend()
+#%%
+y_mse = model.evaluate(predictors, target)
+print(y_mse)
+#%%
+
+
+#%% siecc
+# Set up the model: model
+model_2 = Sequential()
+
+# Add the first layer
+model_2.add(Dense(100, activation='relu', input_shape=(n_cols,)))
+
+# Add the second layer
+model_2.add(Dense(100, activation='relu'))
+
+# Add the output layer
+model_2.add(Dense(1))
+
+model_2.summary()
+#%% fit 
+
+# Compile the model
+model_2.compile(optimizer='adam', loss='mean_squared_error')
+
+# Verify that model contains information from compiling
+print("Loss function: " + model_2.loss)
+
+history_2 =  model_2.fit(predictors, target, validation_split=0.3, epochs=20)
+
+
+# %%Create the plot
+
+
+plt.plot(history_2.history['loss'], label='Training loss')
+plt.plot(history_2.history['val_loss'], label='Validation loss')
+plt.legend()
+#%%
+y_mse_2 = model.evaluate(predictors, target)
+print(y_mse_2)
+#%%
