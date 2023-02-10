@@ -1,0 +1,84 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Feb  9 11:26:42 2023
+
+@author: rafal
+"""
+
+#%% import  
+import pandas as pd
+import numpy as np 
+
+#%% 
+dax = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\dane\^dax_d.csv')
+dax.rename(columns = {'Zamkniecie':'dax'}, inplace = True)
+dax = dax.drop(dax.columns[[1, 2, 3, 5]], axis=1)
+dax.head()
+dax.shape
+#%% 
+spx = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\dane\^spx_d.csv')
+spx.rename(columns = {'Zamkniecie':'spx'}, inplace = True)
+spx = spx.drop(spx.columns[[1, 2, 3, 5]], axis=1)
+spx.head()
+spx.shape
+#%% merge
+df_1 = pd.merge(dax,spx, on='Data', how = 'inner' )
+df_1.head()
+df_1.shape
+
+#%% 
+nkx = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\dane\^nkx_d.csv')
+nkx.rename(columns = {'Zamkniecie':'nkx'}, inplace = True)
+nkx = nkx.drop(nkx.columns[[1, 2, 3, 5]], axis=1)
+nkx.head()
+nkx.shape
+#%% merge
+df_2 = pd.merge(df_1,nkx, on='Data', how = 'inner' )
+df_2.head()
+df_2.shape
+#%%  bounds
+dey10 = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\dane\10dey.csv')
+dey10.rename(columns = {'Zamkniecie':'dey10'}, inplace = True)
+dey10 = dey10.drop(dey10.columns[[1, 2, 3]], axis=1)
+
+ 
+jpy10 = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\dane\10jpy_b_d.csv')
+jpy10.rename(columns = {'Zamkniecie':'jpy10'}, inplace = True)
+jpy10 = jpy10.drop(jpy10.columns[[1, 2, 3]], axis=1)
+
+
+
+usy10 = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\dane\10usy_b_d.csv')
+usy10.rename(columns = {'Zamkniecie':'usy10'}, inplace = True)
+usy10 = usy10.drop(usy10.columns[[1, 2, 3]], axis=1)
+
+
+bound_1 = pd.merge(dey10,jpy10, on='Data', how = 'inner' )
+bound_2 = pd.merge(bound_1,usy10, on='Data', how = 'inner' )
+#%% currency
+eurjpy = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\dane\eurjpy_d.csv')
+eurjpy.rename(columns = {'Zamkniecie':'eurjpy'}, inplace = True)
+eurjpy = eurjpy.drop(eurjpy.columns[[1, 2, 3]], axis=1)
+
+
+ 
+eurusd = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\dane\eurusd_d.csv')
+eurusd.rename(columns = {'Zamkniecie':'eurusd'}, inplace = True)
+eurusd = eurusd.drop(eurusd.columns[[1, 2, 3]], axis=1)
+
+ 
+usdjpy = pd.read_csv(r'C:\Users\rafal\Desktop\phyton\LSTM\dane\usdjpy_d.csv')
+usdjpy.rename(columns = {'Zamkniecie':'usdjpy'}, inplace = True)
+usdjpy = usdjpy.drop(usdjpy.columns[[1, 2, 3]], axis=1)
+
+
+
+fx_1 = pd.merge(eurjpy,eurusd, on='Data', how = 'inner' )
+fx_2 = pd.merge(fx_1,usdjpy, on='Data', how = 'inner' )
+#%% all in one DF 
+data_1 = pd.merge(df_2,bound_2, on='Data', how = 'inner' )
+data = pd.merge(data_1, fx_2, on='Data', how = 'inner' )
+
+#%% export to csv
+
+#data.to_csv('df_lstm')
