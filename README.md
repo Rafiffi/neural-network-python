@@ -2,6 +2,6 @@
 
 data preparation - done 
 keras_wages_data - done
-stock_keras - near done 
-LSTM_1 - work in progress
-LSTM_2 - work in progress
+stock_keras - near done (wymaga poprawy)
+LSTM_1 - work in progress (wymaga poprawy)
+LSTM_2 - work in progress (wymaga poprawy)
